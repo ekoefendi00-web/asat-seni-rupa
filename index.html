@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ASAT 2026 - SDN NGASEM I - SENI RUPA</title>
+    <style>
+        :root {
+            --primary: #2563eb; --primary-dark: #1e40af; --accent: #f59e0b;
+            --bg: #f1f5f9; --text-main: #1e293b; --white: #ffffff;
+            --danger: #ef4444; --success: #10b981; --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; transition: all 0.2s ease; font-family: 'Inter', system-ui, sans-serif; }
+        body { background: var(--bg); margin: 0; user-select: none; color: var(--text-main); overflow-x: hidden; }
+
+        #login-page {
+            position: fixed; inset: 0; background: linear-gradient(135deg, #4f46e5, #312e81); 
+            display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 20px;
+        }
+        .login-card { background: white; padding: 40px; border-radius: 20px; width: 100%; max-width: 420px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); text-align: center; }
+        .logo-tutwuri { width: 80px; height: auto; margin-bottom: 20px; }
+
+        header { 
+            background: var(--white); border-bottom: 2px solid var(--border); padding: 0 25px; 
+            display: none; justify-content: space-between; align-items: center; height: 75px;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .timer-box { background: #fff1f2; padding: 10px 20px; border-radius: 10px; border: 1px solid #ffe4e6; font-weight: 800; font-size: 1.3rem; color: var(--danger); font-family: monospace; }
+
+        .main-wrapper { display: none; min-height: calc(100vh - 75px); padding: 25px; gap: 25px; max-width: 1400px; margin: 0 auto; }
+        .soal-section { flex: 3; background: white; border-radius: 15px; border: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .soal-content { flex: 1; padding: 30px; font-size: 1.15rem; line-height: 1.7; overflow-y: auto; }
+        
+        .q-image { max-width: 100%; height: auto; border-radius: 10px; margin-bottom: 20px; border: 1px solid var(--border); }
+
+        .opt-item { border: 1px solid var(--border); padding: 15px; margin-bottom: 12px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 15px; }
+        .opt-item:hover { background: #f8fafc; border-color: var(--primary); }
+        .opt-item.selected { background: #eff6ff; border: 2px solid var(--primary); font-weight: 600; }
+        .opt-label { min-width: 32px; height: 32px; border-radius: 50%; border: 2px solid #cbd5e1; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: bold; }
+        .selected .opt-label { background: var(--primary); color: white; border-color: var(--primary); }
+
+        input[type="text"], textarea { width: 100%; padding: 15px; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; margin-top: 10px; }
+        textarea { height: 150px; resize: none; }
+
+        .sidebar { flex: 1; background: white; border-radius: 15px; padding: 20px; max-width: 320px; border: 1px solid var(--border); height: fit-content; position: sticky; top: 100px; }
+        .grid-nomor { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 15px; }
+        .btn-nomor { aspect-ratio: 1/1; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 8px; font-weight: 700; font-size: 0.85rem; background: white; }
+        .btn-nomor.active { border: 2px solid var(--primary); color: var(--primary); }
+        .btn-nomor.filled { background: var(--primary); color: white; border-color: var(--primary); }
+
+        #result-page { display: none; max-width: 500px; margin: 50px auto; background: white; padding: 40px; border-radius: 20px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 10000; justify-content: center; align-items: center; flex-direction: column; }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+<div id="loading" class="loading-overlay">
+    <div style="border: 5px solid #f3f3f3; border-top: 5px solid var(--primary); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;"></div>
+    <p style="margin-top: 15px; font-weight: bold;">Sedang mengirim jawaban ke server...</p>
+</div>
+
+<div id="login-page">
+    <div class="login-card">
+        <img src="https://awsimages.detik.net.id/community/media/visual/2023/05/02/lambang-tut-wuri-handayani.png?w=700&q=90" class="logo-tutwuri" alt="Logo">
+        <h1 style="color: var(--primary); margin: 0; font-size: 1.5rem;">ASAT SENI RUPA</h1>
+        <p style="margin-top: 5px; font-weight: 600; color: #64748b;">SD NEGERI NGASEM I TAHUN 2026</p>
+        
+        <div style="text-align: left; margin-top: 25px;">
+            <label style="font-weight: bold; font-size: 0.85rem;">Nama Lengkap</label>
+            <input type="text" id="stu-name" placeholder="Nama sesuai absen..." autocomplete="off">
+            <label style="font-weight: bold; font-size: 0.85rem; display:block; margin-top:15px">Nomor Peserta</label>
+            <input type="text" id="stu-id" placeholder="Contoh: 2026-001" autocomplete="off">
+        </div>
+        
+        <button onclick="startExam()" style="width: 100%; padding: 15px; border-radius: 8px; border: none; background: var(--primary); color: white; font-weight: 700; cursor: pointer; margin-top:20px">MULAI UJIAN</button>
+    </div>
+</div>
+
+<header id="exam-header">
+    <div>
+        <small style="color: #64748b; font-weight: bold;">PESERTA:</small>
+        <div id="user-display" style="font-weight: 800; color: var(--primary);">NAMA PESERTA</div>
+    </div>
+    <div class="timer-box" id="timer">90:00</div>
+</header>
+
+<div class="main-wrapper" id="exam-body">
+    <div class="soal-section">
+        <div style="padding: 15px 25px; background: #f8fafc; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; font-weight: 700;">
+            <span id="header-no">SOAL NO 1</span>
+            <span id="q-type" style="background: #e0f2fe; color: var(--primary); font-size: 0.7rem; padding: 4px 10px; border-radius: 6px;">TIPE</span>
+        </div>
+        <div class="soal-content">
+            <div id="img-container"></div>
+            <div id="q-text" style="font-weight:600; margin-bottom:20px"></div>
+            <div id="ans-area"></div>
+        </div>
+        <div style="padding: 20px 25px; border-top: 1px solid var(--border); display: flex; gap: 10px; background: #f8fafc;">
+            <button id="btn-prev" onclick="nav(-1)" style="padding: 12px 20px; border: none; border-radius: 8px; background: #e2e8f0; font-weight: 700; cursor: pointer;">KEMBALI</button>
+            <button id="btn-next" onclick="nav(1)" style="flex-grow: 1; padding: 12px 20px; border: none; border-radius: 8px; background: var(--primary); color: white; font-weight: 700; cursor: pointer;">BERIKUTNYA</button>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <div style="font-weight: 800; font-size: 0.9rem; margin-bottom: 10px; display: flex; justify-content: space-between;">
+            <span>NAVIGASI SOAL</span> 
+            <span id="progress" style="color: var(--primary);">0/50</span>
+        </div>
+        <div class="grid-nomor" id="nav-grid"></div>
+        <button onclick="confirmFinish()" style="width: 100%; margin-top: 25px; padding: 15px; border-radius: 10px; border: none; background: var(--danger); color: white; font-weight: 700; cursor: pointer;">SELESAI & KIRIM</button>
+    </div>
+</div>
+
+<div id="result-page">
+    <h2 style="color: var(--primary);">UJIAN BERHASIL DIKIRIM</h2>
+    <p>Terima kasih telah mengerjakan ujian Seni Rupa.</p>
+    <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0; border: 1px solid var(--border); text-align: left;">
+        <p><b>Catatan:</b> Nilai Pilihan Ganda dikoreksi otomatis, sedangkan Isian dan Uraian akan diperiksa manual oleh Guru.</p>
+    </div>
+    <button onclick="clearAndReload()" style="width: 100%; padding: 14px; border-radius: 10px; border: none; background: var(--primary); color: white; cursor: pointer; font-weight: bold;">KELUAR</button>
+</div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwjsNEJnKawfjmqgc29ceJqnqEu9wWq-fKkdLQIrPlkxd2omBg_MbfjeRc5PIFCWHOw/exec"; 
+
+    const bankSoal = [
+        { id: 1, type: 'pg', q: "Keseimbangan yang sama kedua sisinya disebut…", o: ["Simetris", "Asimetris", "Singkron", "Asinkron"], a: "A" },
+        { id: 2, type: 'pg', q: "Penggambaran objek benda yang memberikan kesan tidak berat sebelah disalah satu sisi dan ringan disisi yang lain disebut…", o: ["Irama", "Kesimbangan", "Kesatuan", "Proposi"], a: "B" },
+        { id: 3, type: 'pg', q: "Prinsip keseimbangan pada seni rupa yang sesuai dengan gambar di atas adalah…", o: ["Irama", "Asimetris", "Tektur", "Simetris"], a: "D", img: "https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/quizzes/cdd06090-710e-4e10-a551-773797b849d9-v2?w=200&h=200" },
+        // ... (data soal lainnya tetap sama)
+        { id: 4, type: 'pg', q: "Ragam hias dari nusantara banyak jenisnya. Benda berikut yang indentik dengan ragam hias adalah…", o: ["Batik", "Senjata tradisonal", "Rumah adat", "Tarian daerah"], a: "A" },
+        { id: 5, type: 'pg', q: "Dalam pembuatan ragam hias dengan keseimbangan bebas maka diperlukan alat seperti…", o: ["Kain", "Koran", "Kuas", "Kertas"], a: "C" },
+        { id: 6, type: 'pg', q: "Cara menggambar gelap terang objek gambar yang menggunakan pensil / pena gambar dengan di titik-titikan disebut teknik…", o: ["Dusel", "Pointelis", "Akuarel", "Blok"], a: "B" },
+        { id: 7, type: 'pg', q: "Berikut karya seni yang bisa diberi ragam hias flora adalah…", o: ["Lukisan", "Keramik", "Batik", "Poster"], a: "C" },
+        { id: 8, type: 'pg', q: "Cabang seni yang dapat dinikmati dengan indra peraba dan indra penglihatan adalah…", o: ["Seni musik", "Seni rupa", "Seni Teater", "Seni tari"], a: "B" },
+        { id: 9, type: 'pg', q: "Proses pengontrolan bentuk ragam hias ukiran disebut…", o: ["Menggambar pola", "Menghaluskan bentuk", "Merancap", "Finishing"], a: "C" },
+        { id: 10, type: 'pg', q: "Asal ukiran sesuai motif pada gambar berasal dari ....", o: ["Bali", "Jepara", "Cirebon", "Mataram"], a: "B", img: "https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/quizzes/08de5317-26b1-46e9-ac89-19873ecc27c5-v2?w=200&h=200" },
+        { id: 11, type: 'pg', q: "Ukiran motif hias pada gambar biasa disebut motif Mega Mendung yang berasal dari ....", o: ["Jepara", "Batak", "Cirebon", "Mataram"], a: "C",  img: "https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/quizzes/0a7ed06c-0bba-4a03-a430-f7a680d1153c-v2?w=200&h=200" },
+        { id: 12, type: 'pg', q: "Tujuan utama dari seni adalah membuat segala sesuatu menjadi lebih…", o: ["Berkesan", "Indah", "Unik", "Rumit"], a: "B" },
+        { id: 13, type: 'pg', q: "Pada umumnya motif ragam hias yang ada di Nusantara mengambil bentuk dari…", o: ["Bunga", "Keris", "Garis", "Lingkaran"], a: "A" },
+        { id: 14, type: 'pg', q: "Makna ragam hias ular naga dari Jawa Timur adalah…", o: ["Penolak Balak", "Kekuatan", "Pencari kebenaran", "Rejeki lancar"], a: "A" },
+        { id: 15, type: 'pg', q: "Ukiran termasuk dalam karya seni… dimensi", o: ["Satu dimensi", "Dua dimensi", "Tiga dimensi", "Empat dimensi"], a: "C" },
+        { id: 16, type: 'pg', q: "Desain hias dibuat sedemikian rupa sehingga lebih kuat merupakan prinsip…", o: ["Kesatuan", "Tepat guna", "Tepat Bahan", "Kontruksi"], a: "D" },
+        { id: 17, type: 'pg', q: "Ragam hias motif fauna Komodo berasal dari…", o: ["Nusa Tenggara Timur", "Makasar", "Bandung", "Semarang"], a: "A" },
+        { id: 18, type: 'pg', q: "Ragam hias yang dikembangkan di Papua adalah motif…", o: ["Burung cinderawasih", "Ular naga", "Tengul", "Komodo"], a: "A" },
+        { id: 19, type: 'pg', q: "Teknik mistar merupakan Teknik menggambar ragam hias dengan menggunakan bantuan…", o: ["Pensil", "Busur", "Penggaris", "Jangka"], a: "C" },
+        { id: 20, type: 'pg', q: "Tempat untuk memamerkan hasil dari berbagai ragam hias nusantara adalah…", o: ["Teater", "Galeri", "Auditarium", "Stadion"], a: "B" },
+        { id: 21, type: 'pg', q: "Seni hias kebudayaan Islam adalah seni…", o: ["Rupa", "Tajwid", "Kaligrafi", "Bebas"], a: "C" },
+        { id: 22, type: 'pg', q: "Stilasi ragam hias merupakan karya seni…dimensi", o: ["Satu dimensi", "Dua dimensi", "Tiga dimensi", "Empat dimensi"], a: "B" },
+        { id: 23, type: 'pg', q: "Contoh karya seni yang bisa dilihat dari berbagai arah disebut…", o: ["Patung", "Lukisan", "Foto", "Gambar"], a: "A" },
+        { id: 24, type: 'pg', q: "Penciptaan karya seni dengan menciptakan sesuatu yang belum pernah ada dan mempunyai arti disebut…", o: ["Kreatifitas", "Ide", "Sketsa", "Miniature"], a: "A" },
+        { id: 25, type: 'pg', q: "Gambaran awal bentuk kerajinan dari limbah rumah tangga yang akan dibuat disebut…", o: ["Desain", "Denah", "Sketsa", "Miniature"], a: "C" },
+        { id: 26, type: 'pg', q: "Berikut yang merupakan contoh limbah padat adalah…", o: ["Sisa makanan", "Air limbah", "Air sabun", "Kertas"], a: "D" },
+        { id: 27, type: 'pg', q: "Berikut limbah bahan lunak yang digunakan untuk lukisan adalah…", o: ["Sedotan", "Kardus", "Botol plastic", "Pelepah pisang"], a: "D" },
+        { id: 28, type: 'pg', q: "Kaca, kaleng dan plastik termasuk limbah…", o: ["Alami", "Natural", "Organik", "Anorganik"], a: "D" },
+        { id: 29, type: 'pg', q: "Syarat dari kerajinan berbahan lunak dan mampu memberikan kenyamanan adalah…", o: ["Utility", "Comfortable", "Rapidity", "Safety"], a: "B" },
+        { id: 30, type: 'pg', q: "Daur ulang adalah kegiatan untuk menjadikan sesuatu bahan bekas menjadi…", o: ["Bahan baku", "Bahan lama", "Bahan ubah", "Bahan baru"], a: "D" },
+        { id: 31, type: 'pg', q: "Tekstur kertas koran adalah…", o: ["Halus", "Sedikit kasar", "Basah", "Kering"], a: "B" },
+        { id: 32, type: 'pg', q: "Bahan dasar untuk membuat boneka aksi adalah…", o: ["Kayu", "Alumunium", "Besi", "Plastik"], a: "D" },
+        { id: 33, type: 'pg', q: "Manfaat membuat kerajinan dari daur kertas adalah membuat bumi menjadi…", o: ["Aman", "Lestari", "Damai", "Hidup"], a: "B" },
+        { id: 34, type: 'pg', q: "Bahan dasar untuk membuat kertas koran adalah…", o: ["Karet", "Tebu", "Bambu", "Jerami"], a: "C" },
+        { id: 35, type: 'pg', q: "Negara yang mengawali sejarah produksi kertas adalah…", o: ["Turki", "Mesir", "Perancis", "Tiongkok"], a: "D" },
+
+        { id: 36, type: 'isian', q: "Objek dua dimensi memiliki ukuran ... dan ...", a: "panjang dan lebar" },
+        { id: 37, type: 'isian', q: "Menggambar merupakan bagian dari karya seni ...", a: "rupa" },
+        { id: 38, type: 'isian', q: "Jepara terkenal dengan pusat kerajinan ...", a: "ukir" },
+        { id: 39, type: 'isian', q: "Motif hias Cirebon sering diaplikasikan pada kain ...", a: "batik" },
+        { id: 40, type: 'isian', q: "Motif burung cinderawasih berasal dari ...", a: "papua" },
+        { id: 41, type: 'isian', q: "Motif pola yang penataannya ragam hias diletakkan pada bagian tepi benda disebut ...", a: "pinggiran" },
+        { id: 42, type: 'isian', q: "Teknik manual dalam stilasi membutuhkan keterampilan ...", a: "tangan" },
+        { id: 43, type: 'isian', q: "Media yang digunakan dalam membuat ragam hias adalah ...", a: "bidang datar" },
+        { id: 44, type: 'isian', q: "Sampah plastik, kaleng termasuk jenis limbah ...", a: "anorganik" },
+        { id: 45, type: 'isian', q: "Kertas yang tidak terpakai akan mencemari ...", a: "lingkungan" },
+
+        { id: 46, type: 'uraian', q: "Jelaskan apa yang dimaksud dengan keseimbangan!", a: "" },
+        { id: 47, type: 'uraian', q: "Sebutkan 3 jenis motif batik jonegoroan!", a: "" },
+        { id: 48, type: 'uraian', q: "Sebutkan 3 jenis bentuk ragam hias!", a: "" },
+        { id: 49, type: 'uraian', q: "Sebutkan 3 teknik menggambar ragam hias!", a: "" },
+        { id: 50, type: 'uraian', q: "Sebutkan 3 manfaat mendaur ulang limbah!", a: "" }
+    ];
+
+    let current = 0;
+    let answers = {};
+
+    // Mencegah Siswa Keluar Halaman Secara Tidak Sengaja
+    window.onbeforeunload = function() {
+        return "Data ujian mungkin hilang jika Anda keluar.";
+    };
+
+async function startExam() {
+    const name = document.getElementById('stu-name').value.trim();
+    const id = document.getElementById('stu-id').value.trim();
+    
+    if(!name || !id) { 
+        alert("Nama dan Nomor harus diisi!"); 
+        return; 
+    }
+
+    // Tampilkan loading saat mengecek status
+    document.getElementById('loading').style.display = 'flex';
+    document.getElementById('loading').querySelector('p').innerText = "Memvalidasi data peserta...";
+
+    try {
+        // Memanggil fungsi checkStatus di GAS
+        const response = await fetch(`${SCRIPT_URL}?action=checkStatus&no_peserta=${id}`);
+        const status = await response.text();
+
+        if (status === "exists") {
+            alert("Maaf, Nomor Peserta ini sudah digunakan untuk mengirim jawaban.");
+            document.getElementById('loading').style.display = 'none';
+            return;
+        }
+
+        // Jika tersedia, lanjut ke ujian
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('user-display').innerText = name.toUpperCase();
+        document.getElementById('login-page').style.display = 'none';
+        document.getElementById('exam-header').style.display = 'flex';
+        document.getElementById('exam-body').style.display = 'flex';
+        
+        // Load Auto-save jika ada
+        const saved = localStorage.getItem('asat_answers');
+        if(saved) answers = JSON.parse(saved);
+
+        initNav();
+        render();
+        startTimer(90);
+        
+    } catch (err) {
+        document.getElementById('loading').style.display = 'none';
+        alert("Gagal terhubung ke server. Pastikan koneksi internet stabil.");
+    }
+}
+    function initNav() {
+        const grid = document.getElementById('nav-grid');
+        grid.innerHTML = "";
+        bankSoal.forEach((_, i) => {
+            const btn = document.createElement('div');
+            btn.className = 'btn-nomor';
+            btn.id = 'bn-' + i;
+            btn.innerText = i + 1;
+            btn.onclick = () => { current = i; render(); };
+            grid.appendChild(btn);
+        });
+    }
+
+    function render() {
+        const s = bankSoal[current];
+        document.getElementById('header-no').innerText = "SOAL NO " + (current + 1);
+        document.getElementById('q-type').innerText = s.type.toUpperCase();
+        document.getElementById('q-text').innerText = s.q;
+        
+        // Handle Gambar
+        const imgContainer = document.getElementById('img-container');
+        imgContainer.innerHTML = s.img ? `<img src="${s.img}" class="q-image">` : "";
+
+        const area = document.getElementById('ans-area');
+        area.innerHTML = "";
+
+        if(s.type === 'pg') {
+            s.o.forEach((opt, i) => {
+                const char = String.fromCharCode(65 + i);
+                const div = document.createElement('div');
+                const isSelected = answers[current] === char;
+                div.className = 'opt-item' + (isSelected ? ' selected' : '');
+                div.innerHTML = `<div class="opt-label">${char}</div><div>${opt}</div>`;
+                div.onclick = () => { saveAnswer(char); };
+                area.appendChild(div);
+            });
+        } else if(s.type === 'isian') {
+            area.innerHTML = `<input type="text" id="ans-input" value="${answers[current]||''}" oninput="saveAnswer(this.value)" placeholder="Ketik jawaban singkat...">`;
+        } else {
+            area.innerHTML = `<textarea oninput="saveAnswer(this.value)" placeholder="Tuliskan penjelasan lengkap...">${answers[current]||''}</textarea>`;
+        }
+        updateUI();
+    }
+
+    function saveAnswer(val) {
+        answers[current] = val;
+        localStorage.setItem('asat_answers', JSON.stringify(answers));
+        if(bankSoal[current].type === 'pg') render(); // Re-render for selection style
+        updateUI();
+    }
+
+    function updateUI() {
+        let count = 0;
+        bankSoal.forEach((_, i) => {
+            const btn = document.getElementById('bn-' + i);
+            if(answers[i] && answers[i] !== "") { 
+                btn.classList.add('filled'); 
+                count++; 
+            } else {
+                btn.classList.remove('filled');
+            }
+            if(current === i) btn.classList.add('active'); else btn.classList.remove('active');
+        });
+        document.getElementById('progress').innerText = count + "/50";
+        document.getElementById('btn-prev').disabled = current === 0;
+        document.getElementById('btn-next').innerText = current === 49 ? "KONFIRMASI SELESAI" : "BERIKUTNYA";
+    }
+
+    function nav(d) {
+        if(current + d >= 0 && current + d < 50) { current += d; render(); }
+        else if (current + d === 50) confirmFinish();
+    }
+
+    function confirmFinish() {
+        const count = Object.values(answers).filter(a => a !== "").length;
+        if(count < 50) {
+            if(!confirm(`Ada ${50 - count} soal belum dijawab. Tetap kirim?`)) return;
+        } else {
+            if(!confirm("Yakin ingin mengakhiri ujian dan kirim jawaban?")) return;
+        }
+        
+        submitData();
+    }
+
+    function submitData() {
+        document.getElementById('loading').style.display = 'flex';
+        window.onbeforeunload = null; // Izinkan navigasi setelah kirim
+
+        let pgBenar = 0;
+        bankSoal.forEach((s, i) => {
+            if(s.type === 'pg' && answers[i] === s.a) pgBenar++;
+        });
+
+        const payload = {
+            nama: document.getElementById('stu-name').value,
+            nomor_peserta: document.getElementById('stu-id').value,
+            skor_pg: pgBenar,
+            jawaban_lengkap: JSON.stringify(answers)
+        };
+
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            body: JSON.stringify(payload)
+        }).then(() => {
+            localStorage.removeItem('asat_answers');
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('exam-body').style.display = 'none';
+            document.getElementById('exam-header').style.display = 'none';
+            document.getElementById('result-page').style.display = 'block';
+        }).catch(() => {
+            alert("Gagal mengirim! Periksa internet Anda.");
+            document.getElementById('loading').style.display = 'none';
+        });
+    }
+
+    function startTimer(m) {
+        let t = m * 60;
+        const iv = setInterval(() => {
+            let mn = Math.floor(t/60); let s = t%60;
+            document.getElementById('timer').innerText = `${mn}:${s<10?'0':''}${s}`;
+            if(t-- <= 0) { 
+                clearInterval(iv); 
+                alert("Waktu habis! Jawaban akan dikirim otomatis.");
+                submitData(); 
+            }
+        }, 1000);
+    }
+
+    function clearAndReload() {
+        localStorage.removeItem('asat_answers');
+        location.reload();
+    }
+
+    // Blokir Copy-Paste & Shortcut Keyboard
+    document.addEventListener('keydown', e => {
+        if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'u')) {
+            e.preventDefault();
+            alert("Dilarang melakukan tindakan curang!");
+        }
+    });
+</script>
+</body>
+</html>
