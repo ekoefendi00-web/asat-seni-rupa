@@ -2,8 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ASAT 2026 - SDN NGASEM I - SENI RUPA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASAT 2026 - SDN NGASEM I - BAHASA INGGRIS</title>
     <style>
         :root {
             --primary: #2563eb; --primary-dark: #1e40af; --accent: #f59e0b;
@@ -14,42 +14,94 @@
         * { box-sizing: border-box; transition: all 0.2s ease; font-family: 'Inter', system-ui, sans-serif; }
         body { background: var(--bg); margin: 0; user-select: none; color: var(--text-main); overflow-x: hidden; }
 
+        /* Login Page */
         #login-page {
             position: fixed; inset: 0; background: linear-gradient(135deg, #4f46e5, #312e81); 
-            display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 20px;
+            display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 15px;
         }
-        .login-card { background: white; padding: 40px; border-radius: 20px; width: 100%; max-width: 420px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); text-align: center; }
-        .logo-tutwuri { width: 80px; height: auto; margin-bottom: 20px; }
+        .login-card { background: white; padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); text-align: center; }
+        .logo-tutwuri { width: 70px; height: auto; margin-bottom: 15px; }
 
+        /* Header */
         header { 
-            background: var(--white); border-bottom: 2px solid var(--border); padding: 0 25px; 
-            display: none; justify-content: space-between; align-items: center; height: 75px;
+            background: var(--white); border-bottom: 2px solid var(--border); padding: 0 20px; 
+            display: none; justify-content: space-between; align-items: center; height: 70px;
             position: sticky; top: 0; z-index: 100;
         }
-        .timer-box { background: #fff1f2; padding: 10px 20px; border-radius: 10px; border: 1px solid #ffe4e6; font-weight: 800; font-size: 1.3rem; color: var(--danger); font-family: monospace; }
+        .timer-box { background: #fff1f2; padding: 8px 15px; border-radius: 10px; border: 1px solid #ffe4e6; font-weight: 800; font-size: 1.1rem; color: var(--danger); font-family: monospace; }
 
-        .main-wrapper { display: none; min-height: calc(100vh - 75px); padding: 25px; gap: 25px; max-width: 1400px; margin: 0 auto; }
-        .soal-section { flex: 3; background: white; border-radius: 15px; border: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        .soal-content { flex: 1; padding: 30px; font-size: 1.15rem; line-height: 1.7; overflow-y: auto; }
-        
-        .q-image { max-width: 100%; height: auto; border-radius: 10px; margin-bottom: 20px; border: 1px solid var(--border); }
+        /* Main Layout */
+        .main-wrapper { 
+            display: none; 
+            padding: 20px; 
+            gap: 20px; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            flex-direction: row; /* Desktop sampingan */
+        }
 
-        .opt-item { border: 1px solid var(--border); padding: 15px; margin-bottom: 12px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 15px; }
-        .opt-item:hover { background: #f8fafc; border-color: var(--primary); }
+        .soal-section { 
+            flex: 2; 
+            background: white; 
+            border-radius: 15px; 
+            border: 1px solid var(--border); 
+            display: flex; 
+            flex-direction: column; 
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); 
+        }
+
+        .sidebar { 
+            flex: 1; 
+            background: white; 
+            border-radius: 15px; 
+            padding: 20px; 
+            max-width: 320px; 
+            border: 1px solid var(--border); 
+            height: fit-content; 
+            position: sticky; 
+            top: 90px; 
+        }
+
+        /* Responsive HP */
+        @media (max-width: 850px) {
+            .main-wrapper { flex-direction: column; padding: 10px; }
+            .sidebar { max-width: 100%; position: static; order: 2; } /* Sidebar pindah ke bawah soal */
+            .soal-section { order: 1; }
+            header { height: 60px; padding: 0 15px; }
+            #user-display { font-size: 0.9rem; }
+            .timer-box { font-size: 1rem; }
+        }
+
+        /* Soal Content */
+        .soal-content { padding: 25px; font-size: 1.1rem; line-height: 1.6; }
+        .q-image { max-width: 100%; height: auto; border-radius: 10px; margin-bottom: 15px; border: 1px solid var(--border); display: block; margin-left: auto; margin-right: auto; }
+
+        .opt-item { border: 1px solid var(--border); padding: 12px 15px; margin-bottom: 10px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 12px; }
+        .opt-item:hover { background: #f8fafc; }
         .opt-item.selected { background: #eff6ff; border: 2px solid var(--primary); font-weight: 600; }
-        .opt-label { min-width: 32px; height: 32px; border-radius: 50%; border: 2px solid #cbd5e1; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: bold; }
+        .opt-label { min-width: 30px; height: 30px; border-radius: 50%; border: 2px solid #cbd5e1; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold; }
         .selected .opt-label { background: var(--primary); color: white; border-color: var(--primary); }
 
-        input[type="text"], textarea { width: 100%; padding: 15px; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; margin-top: 10px; }
-        textarea { height: 150px; resize: none; }
+        /* Grid Nomor Navigasi */
+        .grid-nomor { 
+            display: grid; 
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 8px; 
+            margin-top: 15px; 
+        }
+        
+        @media (max-width: 480px) {
+            .grid-nomor { grid-template-columns: repeat(6, 1fr); } /* Lebih ramping di HP */
+        }
 
-        .sidebar { flex: 1; background: white; border-radius: 15px; padding: 20px; max-width: 320px; border: 1px solid var(--border); height: fit-content; position: sticky; top: 100px; }
-        .grid-nomor { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 15px; }
-        .btn-nomor { aspect-ratio: 1/1; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 8px; font-weight: 700; font-size: 0.85rem; background: white; }
-        .btn-nomor.active { border: 2px solid var(--primary); color: var(--primary); }
+        .btn-nomor { aspect-ratio: 1/1; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 8px; font-weight: 700; font-size: 0.8rem; background: white; }
+        .btn-nomor.active { border: 2px solid var(--primary); color: var(--primary); background: #eff6ff; }
         .btn-nomor.filled { background: var(--primary); color: white; border-color: var(--primary); }
 
-        #result-page { display: none; max-width: 500px; margin: 50px auto; background: white; padding: 40px; border-radius: 20px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        input[type="text"], textarea { width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 10px; font-size: 1rem; margin-top: 10px; outline: none; }
+        input[type="text"]:focus, textarea:focus { border-color: var(--primary); }
+
+        #result-page { display: none; max-width: 500px; margin: 50px auto; background: white; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
         .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 10000; justify-content: center; align-items: center; flex-direction: column; }
 
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -59,37 +111,38 @@
 
 <div id="loading" class="loading-overlay">
     <div style="border: 5px solid #f3f3f3; border-top: 5px solid var(--primary); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;"></div>
-    <p style="margin-top: 15px; font-weight: bold;">Sedang mengirim jawaban ke server...</p>
+    <p id="loading-text" style="margin-top: 15px; font-weight: bold;">Memproses...</p>
 </div>
 
 <div id="login-page">
     <div class="login-card">
         <img src="https://awsimages.detik.net.id/community/media/visual/2023/05/02/lambang-tut-wuri-handayani.png?w=700&q=90" class="logo-tutwuri" alt="Logo">
-        <h1 style="color: var(--primary); margin: 0; font-size: 1.5rem;">ASAT SENI RUPA</h1>
-        <p style="margin-top: 5px; font-weight: 600; color: #64748b;">SD NEGERI NGASEM I TAHUN 2026</p>
+        <h2 style="color: var(--primary); margin: 0; font-size: 1.3rem;">ASAT BAHASA INGGRIS</h2>
+        <p style="margin: 5px 0 20px 0; font-weight: 600; color: #64748b; font-size: 0.9rem;">SD NEGERI NGASEM I - 2026</p>
         
-        <div style="text-align: left; margin-top: 25px;">
-            <label style="font-weight: bold; font-size: 0.85rem;">Nama Lengkap</label>
-            <input type="text" id="stu-name" placeholder="Nama sesuai absen..." autocomplete="off">
-            <label style="font-weight: bold; font-size: 0.85rem; display:block; margin-top:15px">Nomor Peserta</label>
+        <div style="text-align: left;">
+            <label style="font-weight: bold; font-size: 0.8rem;">NAMA LENGKAP</label>
+            <input type="text" id="stu-name" placeholder="Masukkan nama..." autocomplete="off">
+            <div style="margin-top:15px"></div>
+            <label style="font-weight: bold; font-size: 0.8rem;">NOMOR PESERTA</label>
             <input type="text" id="stu-id" placeholder="Contoh: 2026-001" autocomplete="off">
         </div>
         
-        <button onclick="startExam()" style="width: 100%; padding: 15px; border-radius: 8px; border: none; background: var(--primary); color: white; font-weight: 700; cursor: pointer; margin-top:20px">MULAI UJIAN</button>
+        <button onclick="startExam()" style="width: 100%; padding: 15px; border-radius: 10px; border: none; background: var(--primary); color: white; font-weight: 700; cursor: pointer; margin-top:25px; font-size: 1rem;">MULAI UJIAN</button>
     </div>
 </div>
 
 <header id="exam-header">
     <div>
-        <small style="color: #64748b; font-weight: bold;">PESERTA:</small>
-        <div id="user-display" style="font-weight: 800; color: var(--primary);">NAMA PESERTA</div>
+        <small style="color: #64748b; font-weight: bold; font-size: 0.7rem;">PESERTA</small>
+        <div id="user-display" style="font-weight: 800; color: var(--primary); text-transform: uppercase;">-</div>
     </div>
     <div class="timer-box" id="timer">90:00</div>
 </header>
 
 <div class="main-wrapper" id="exam-body">
     <div class="soal-section">
-        <div style="padding: 15px 25px; background: #f8fafc; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; font-weight: 700;">
+        <div style="padding: 12px 20px; background: #f8fafc; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-weight: 700;">
             <span id="header-no">SOAL NO 1</span>
             <span id="q-type" style="background: #e0f2fe; color: var(--primary); font-size: 0.7rem; padding: 4px 10px; border-radius: 6px;">TIPE</span>
         </div>
@@ -98,142 +151,130 @@
             <div id="q-text" style="font-weight:600; margin-bottom:20px"></div>
             <div id="ans-area"></div>
         </div>
-        <div style="padding: 20px 25px; border-top: 1px solid var(--border); display: flex; gap: 10px; background: #f8fafc;">
-            <button id="btn-prev" onclick="nav(-1)" style="padding: 12px 20px; border: none; border-radius: 8px; background: #e2e8f0; font-weight: 700; cursor: pointer;">KEMBALI</button>
-            <button id="btn-next" onclick="nav(1)" style="flex-grow: 1; padding: 12px 20px; border: none; border-radius: 8px; background: var(--primary); color: white; font-weight: 700; cursor: pointer;">BERIKUTNYA</button>
+        <div style="padding: 15px 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; background: #f8fafc;">
+            <button id="btn-prev" onclick="nav(-1)" style="padding: 12px 18px; border: 1px solid var(--border); border-radius: 10px; background: white; font-weight: 700; cursor: pointer;">KEMBALI</button>
+            <button id="btn-next" onclick="nav(1)" style="flex-grow: 1; padding: 12px; border: none; border-radius: 10px; background: var(--primary); color: white; font-weight: 700; cursor: pointer;">BERIKUTNYA</button>
         </div>
     </div>
 
     <div class="sidebar">
-        <div style="font-weight: 800; font-size: 0.9rem; margin-bottom: 10px; display: flex; justify-content: space-between;">
+        <div style="font-weight: 800; font-size: 0.85rem; margin-bottom: 12px; display: flex; justify-content: space-between;">
             <span>NAVIGASI SOAL</span> 
             <span id="progress" style="color: var(--primary);">0/50</span>
         </div>
         <div class="grid-nomor" id="nav-grid"></div>
-        <button onclick="confirmFinish()" style="width: 100%; margin-top: 25px; padding: 15px; border-radius: 10px; border: none; background: var(--danger); color: white; font-weight: 700; cursor: pointer;">SELESAI & KIRIM</button>
+        <button onclick="confirmFinish()" style="width: 100%; margin-top: 20px; padding: 12px; border-radius: 10px; border: none; background: var(--danger); color: white; font-weight: 700; cursor: pointer; font-size: 0.9rem;">SELESAI & KIRIM</button>
     </div>
 </div>
 
 <div id="result-page">
-    <h2 style="color: var(--primary);">UJIAN BERHASIL DIKIRIM</h2>
-    <p>Terima kasih telah mengerjakan ujian Seni Rupa.</p>
-    <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0; border: 1px solid var(--border); text-align: left;">
-        <p><b>Catatan:</b> Nilai Pilihan Ganda dikoreksi otomatis, sedangkan Isian dan Uraian akan diperiksa manual oleh Guru.</p>
+    <div style="font-size: 50px; margin-bottom: 10px;">✅</div>
+    <h2 style="color: var(--primary); margin: 0;">BERHASIL TERKIRIM</h2>
+    <p style="color: #64748b;">Terima kasih, jawaban Anda sudah kami terima.</p>
+    <div style="background: #f8fafc; padding: 15px; border-radius: 12px; margin: 20px 0; border: 1px solid var(--border); text-align: left; font-size: 0.9rem;">
+        <p style="margin: 0;"><b>Info:</b> Nilai pilihan ganda diproses sistem, isian/uraian akan dikoreksi manual.</p>
     </div>
     <button onclick="clearAndReload()" style="width: 100%; padding: 14px; border-radius: 10px; border: none; background: var(--primary); color: white; cursor: pointer; font-weight: bold;">KELUAR</button>
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwjsNEJnKawfjmqgc29ceJqnqEu9wWq-fKkdLQIrPlkxd2omBg_MbfjeRc5PIFCWHOw/exec"; 
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzm8qFJpXai7n_BirqdkdWc2EknvgcmMXTUH84Ij6mXwfTvecZhRzaPg4laF8eOaxmQ/exec"; 
 
     const bankSoal = [
-        { id: 1, type: 'pg', q: "Keseimbangan yang sama kedua sisinya disebut…", o: ["Simetris", "Asimetris", "Singkron", "Asinkron"], a: "A" },
-        { id: 2, type: 'pg', q: "Penggambaran objek benda yang memberikan kesan tidak berat sebelah disalah satu sisi dan ringan disisi yang lain disebut…", o: ["Irama", "Kesimbangan", "Kesatuan", "Proposi"], a: "B" },
-        { id: 3, type: 'pg', q: "Prinsip keseimbangan pada seni rupa yang sesuai dengan gambar di atas adalah…", o: ["Irama", "Asimetris", "Tektur", "Simetris"], a: "D", img: "https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/quizzes/cdd06090-710e-4e10-a551-773797b849d9-v2?w=200&h=200" },
-        // ... (data soal lainnya tetap sama)
-        { id: 4, type: 'pg', q: "Ragam hias dari nusantara banyak jenisnya. Benda berikut yang indentik dengan ragam hias adalah…", o: ["Batik", "Senjata tradisonal", "Rumah adat", "Tarian daerah"], a: "A" },
-        { id: 5, type: 'pg', q: "Dalam pembuatan ragam hias dengan keseimbangan bebas maka diperlukan alat seperti…", o: ["Kain", "Koran", "Kuas", "Kertas"], a: "C" },
-        { id: 6, type: 'pg', q: "Cara menggambar gelap terang objek gambar yang menggunakan pensil / pena gambar dengan di titik-titikan disebut teknik…", o: ["Dusel", "Pointelis", "Akuarel", "Blok"], a: "B" },
-        { id: 7, type: 'pg', q: "Berikut karya seni yang bisa diberi ragam hias flora adalah…", o: ["Lukisan", "Keramik", "Batik", "Poster"], a: "C" },
-        { id: 8, type: 'pg', q: "Cabang seni yang dapat dinikmati dengan indra peraba dan indra penglihatan adalah…", o: ["Seni musik", "Seni rupa", "Seni Teater", "Seni tari"], a: "B" },
-        { id: 9, type: 'pg', q: "Proses pengontrolan bentuk ragam hias ukiran disebut…", o: ["Menggambar pola", "Menghaluskan bentuk", "Merancap", "Finishing"], a: "C" },
-        { id: 10, type: 'pg', q: "Asal ukiran sesuai motif pada gambar berasal dari ....", o: ["Bali", "Jepara", "Cirebon", "Mataram"], a: "B", img: "https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/quizzes/08de5317-26b1-46e9-ac89-19873ecc27c5-v2?w=200&h=200" },
-        { id: 11, type: 'pg', q: "Ukiran motif hias pada gambar biasa disebut motif Mega Mendung yang berasal dari ....", o: ["Jepara", "Batak", "Cirebon", "Mataram"], a: "C",  img: "https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/quizzes/0a7ed06c-0bba-4a03-a430-f7a680d1153c-v2?w=200&h=200" },
-        { id: 12, type: 'pg', q: "Tujuan utama dari seni adalah membuat segala sesuatu menjadi lebih…", o: ["Berkesan", "Indah", "Unik", "Rumit"], a: "B" },
-        { id: 13, type: 'pg', q: "Pada umumnya motif ragam hias yang ada di Nusantara mengambil bentuk dari…", o: ["Bunga", "Keris", "Garis", "Lingkaran"], a: "A" },
-        { id: 14, type: 'pg', q: "Makna ragam hias ular naga dari Jawa Timur adalah…", o: ["Penolak Balak", "Kekuatan", "Pencari kebenaran", "Rejeki lancar"], a: "A" },
-        { id: 15, type: 'pg', q: "Ukiran termasuk dalam karya seni… dimensi", o: ["Satu dimensi", "Dua dimensi", "Tiga dimensi", "Empat dimensi"], a: "C" },
-        { id: 16, type: 'pg', q: "Desain hias dibuat sedemikian rupa sehingga lebih kuat merupakan prinsip…", o: ["Kesatuan", "Tepat guna", "Tepat Bahan", "Kontruksi"], a: "D" },
-        { id: 17, type: 'pg', q: "Ragam hias motif fauna Komodo berasal dari…", o: ["Nusa Tenggara Timur", "Makasar", "Bandung", "Semarang"], a: "A" },
-        { id: 18, type: 'pg', q: "Ragam hias yang dikembangkan di Papua adalah motif…", o: ["Burung cinderawasih", "Ular naga", "Tengul", "Komodo"], a: "A" },
-        { id: 19, type: 'pg', q: "Teknik mistar merupakan Teknik menggambar ragam hias dengan menggunakan bantuan…", o: ["Pensil", "Busur", "Penggaris", "Jangka"], a: "C" },
-        { id: 20, type: 'pg', q: "Tempat untuk memamerkan hasil dari berbagai ragam hias nusantara adalah…", o: ["Teater", "Galeri", "Auditarium", "Stadion"], a: "B" },
-        { id: 21, type: 'pg', q: "Seni hias kebudayaan Islam adalah seni…", o: ["Rupa", "Tajwid", "Kaligrafi", "Bebas"], a: "C" },
-        { id: 22, type: 'pg', q: "Stilasi ragam hias merupakan karya seni…dimensi", o: ["Satu dimensi", "Dua dimensi", "Tiga dimensi", "Empat dimensi"], a: "B" },
-        { id: 23, type: 'pg', q: "Contoh karya seni yang bisa dilihat dari berbagai arah disebut…", o: ["Patung", "Lukisan", "Foto", "Gambar"], a: "A" },
-        { id: 24, type: 'pg', q: "Penciptaan karya seni dengan menciptakan sesuatu yang belum pernah ada dan mempunyai arti disebut…", o: ["Kreatifitas", "Ide", "Sketsa", "Miniature"], a: "A" },
-        { id: 25, type: 'pg', q: "Gambaran awal bentuk kerajinan dari limbah rumah tangga yang akan dibuat disebut…", o: ["Desain", "Denah", "Sketsa", "Miniature"], a: "C" },
-        { id: 26, type: 'pg', q: "Berikut yang merupakan contoh limbah padat adalah…", o: ["Sisa makanan", "Air limbah", "Air sabun", "Kertas"], a: "D" },
-        { id: 27, type: 'pg', q: "Berikut limbah bahan lunak yang digunakan untuk lukisan adalah…", o: ["Sedotan", "Kardus", "Botol plastic", "Pelepah pisang"], a: "D" },
-        { id: 28, type: 'pg', q: "Kaca, kaleng dan plastik termasuk limbah…", o: ["Alami", "Natural", "Organik", "Anorganik"], a: "D" },
-        { id: 29, type: 'pg', q: "Syarat dari kerajinan berbahan lunak dan mampu memberikan kenyamanan adalah…", o: ["Utility", "Comfortable", "Rapidity", "Safety"], a: "B" },
-        { id: 30, type: 'pg', q: "Daur ulang adalah kegiatan untuk menjadikan sesuatu bahan bekas menjadi…", o: ["Bahan baku", "Bahan lama", "Bahan ubah", "Bahan baru"], a: "D" },
-        { id: 31, type: 'pg', q: "Tekstur kertas koran adalah…", o: ["Halus", "Sedikit kasar", "Basah", "Kering"], a: "B" },
-        { id: 32, type: 'pg', q: "Bahan dasar untuk membuat boneka aksi adalah…", o: ["Kayu", "Alumunium", "Besi", "Plastik"], a: "D" },
-        { id: 33, type: 'pg', q: "Manfaat membuat kerajinan dari daur kertas adalah membuat bumi menjadi…", o: ["Aman", "Lestari", "Damai", "Hidup"], a: "B" },
-        { id: 34, type: 'pg', q: "Bahan dasar untuk membuat kertas koran adalah…", o: ["Karet", "Tebu", "Bambu", "Jerami"], a: "C" },
-        { id: 35, type: 'pg', q: "Negara yang mengawali sejarah produksi kertas adalah…", o: ["Turki", "Mesir", "Perancis", "Tiongkok"], a: "D" },
+        { id: 1, type: 'pg', q: "Maya ………. to her friend’s house tomorrow. They will do the project together.", o: ["will buy", "will come", "will invite", "will paint"], a: "B" },
+        { id: 2, type: 'pg', q: "The students ………. the teacher some questions after the class.", o: ["will go", "will ask", "will meet", "will study"], a: "B" },
+        { id: 3, type: 'pg', q: "They ………. at the cafe next week.", o: ["will call", "will swim", "will meet", "will sleep"], a: "C" },
+        { id: 4, type: 'pg', q: "I can’t watch TV right now. It’s broken. Dad ………. the TV on the weekend.", o: ["will fix", "will break", "will watch", "will listen to"], a: "A" },
+        { id: 5, type: 'pg', q: "I will go to the Bank next Thursday, ……….", o: ["I will swim", "I will camp", "I will see the doctor", "I will save money"], a: "D" },
+        { id: 6, type: 'pg', q: "She will go to the grocery store. ……….", o: ["She will read books.", "She will sell houses.", "She will practice piano.", "She will buy vegetables."], a: "D" },
+        { id: 7, type: 'pg', q: "Harry will not ………. new books today.", o: ["buy", "bought", "buys", "buying"], a: "A" },
+        { id: 8, type: 'pg', q: "Berry: What will you do this weekend?\nJack: I will go to the zoo. I will ………. many animals and take many pictures.", o: ["see", "saw", "seen", "sees"], a: "A" },
+        { id: 9, type: 'pg', q: "Luca : What will you do this Saturday?\nToni : I will go to the beach. I will ………. seashells.", o: ["collects", "collected", "collecting", "collect"], a: "D" },
+        { id: 10, type: 'pg', q: "Andrea will ………. guitar tonight.", o: ["will plays", "will not played", "will not play", "will playing"], a: "C" },
+        { id: 11, type: 'pg', q: "My mother loves gardening, but she ………. any flowers this week.", o: ["will plants", "will not plant", "will planted", "will not planting"], a: "B" },
+        { id: 12, type: 'pg', q: "John ………. video games before he finished his homework.", o: ["will not plays", "will not played", "will not play", "will not playing"], a: "C" },
+        { id: 13, type: 'pg', q: "Look at the picture. What is the most suitable sentence?", o: ["We will sing song.", "We will read books.", "We will draw pictures.", "We will play board games."], a: "B", img: "https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/quizzes/77e26669-7f52-4e99-8777-6aa7bcce4d62-v2?w=200&h=200" },
+        { id: 14, type: 'pg', q: "Look at the picture. What is the most suitable sentence?", o: ["She will jog.", "She will bike.", "She will swim.", "She will hike."], a: "C", img: "https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/quizzes/22f1c8f8-7ddb-4e4e-8fce-fbb5099a911d-v2?w=200&h=200" },
+        { id: 15, type: 'pg', q: "I will visit my grandparents ……….", o: ["yesterday", "last week", "next week", "two days ago"], a: "C" },
+        { id: 16, type: 'pg', q: "They will fly to Japan ……….", o: ["in June next year", "at the moment", "last April", "last week"], a: "A" },
+        { id: 17, type: 'pg', q: "We’re sure we will pass the exam ……….", o: ["yesterday", "this month", "last week", "two days before"], a: "B" },
+        { id: 18, type: 'pg', q: "Bruno : What will you do ……….?\nTasya : I will go to the grocery store with my mom.", o: ["last week", "yesterday", "at the moment", "tomorrow"], a: "D" },
+        { id: 19, type: 'pg', q: "Lucas : ………. will you give to her?\nNino : I will give her a doll.", o: ["Where", "What", "When", "Who"], a: "B" },
+        { id: 20, type: 'pg', q: "Vio : ……….will you call?\nDory : I will call my mom.", o: ["How", "What", "Where", "Who"], a: "D" },
+        { id: 21, type: 'pg', q: "Ronald : ……….will you buy a book?\nGabriell : I will buy it in the bookstore.", o: ["What", "When", "Who", "Where"], a: "D" },
+        { id: 22, type: 'pg', q: "Sasa : ……….they go to the zoo?\nKiki : They will go to the museum tomorrow morning.", o: ["How", "Who", "When", "What"], a: "C" },
+        { id: 23, type: 'pg', q: "Look at the picture. I want to be a ……….", o: ["singer", "doctor", "photographer", "police officer"], a: "B", img: "https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/quizzes/3d6e27bd-af97-4c53-94c4-16227b5f9983-v2?w=200&h=200" },
+        { id: 24, type: 'pg', q: "Look at the picture. I want to be a ……….", o: ["singer", "scientist", "teacher", "architect"], a: "C", img: "https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/quizzes/45b298de-a4dc-4f33-a815-aa4691da4bc9-v2?w=200&h=200" },
+        { id: 25, type: 'pg', q: "Look at the picture. She wants to be a ……….", o: ["teacher", "secretary", "photographer", "nurse"], a: "B", img: "https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/quizzes/41512bfb-c58b-4e77-97ee-a75ce0bd03d7-v2?w=200&h=200" },
+        { id: 26, type: 'pg', q: "Look at the picture. He wants to be a ……….", o: ["firefighter", "photographer", "postman", "police officer"], a: "A", img: "https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/quizzes/cbc5b639-fc9b-48bc-a001-d1748e942dda-v2?w=200&h=200" },
+        { id: 27, type: 'pg', q: "Farid : What is your dream?\nAskana : I want to be a………. I will work in a kitchen. I will have my own restaurant.", o: ["chef", "teacher", "pilot", "photographer"], a: "A" },
+        { id: 28, type: 'pg', q: "Ciko: I want to be a ………. (Look at the picture)", o: ["mechanic", "doctor", "pilot", "veterinarian"], a: "C", img: "https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/quizzes/ac93fc4e-55d5-42c8-8d62-4a48710c4c14-v2?w=200&h=200" },
+        { id: 29, type: 'pg', q: "Kim : What will you do when you grow up?\nNana : I want to be a police officer. I will work in a ……….", o: ["airport", "school", "police station", "fire department"], a: "C" },
+        { id: 30, type: 'pg', q: "David : What is your dream?\nZico: My dream is to be a great doctor. I will work in a big ....", o: ["airport", "hospital", "kitchen", "laboratory"], a: "B" },
+        { id: 31, type: 'pg', q: "Evelin : What is your dream?\nDanny: I want to be a chef. I will work in a kitchen. I will have my own ……….", o: ["airport", "school", "laboratory", "restaurant"], a: "D" },
+        { id: 32, type: 'pg', q: "Miko : What will you do when you grow up?\nTony: I want to be a pilot. I will fly an .... and travel to many countries.", o: ["cars", "bike", "truck", "airplane"], a: "D" },
+        { id: 33, type: 'pg', q: "Ferra : What is your dream?\nLoki: I want to be an architect. I will design ....", o: ["buildings", "songs", "music", "experiment"], a: "A" },
+        { id: 34, type: 'pg', q: "Hafiza: What is your dream?\nFuadi: I want to be a teacher. I will .... the students.", o: ["treat", "design", "teach", "sing"], a: "C" },
+        { id: 35, type: 'pg', q: "Johny : What will you do when you grow up?\nAbigail: I want to be police. I will .... criminals.", o: ["fly", "catch", "cook", "design"], a: "B" },
 
-        { id: 36, type: 'isian', q: "Objek dua dimensi memiliki ukuran ... dan ...", a: "panjang dan lebar" },
-        { id: 37, type: 'isian', q: "Menggambar merupakan bagian dari karya seni ...", a: "rupa" },
-        { id: 38, type: 'isian', q: "Jepara terkenal dengan pusat kerajinan ...", a: "ukir" },
-        { id: 39, type: 'isian', q: "Motif hias Cirebon sering diaplikasikan pada kain ...", a: "batik" },
-        { id: 40, type: 'isian', q: "Motif burung cinderawasih berasal dari ...", a: "papua" },
-        { id: 41, type: 'isian', q: "Motif pola yang penataannya ragam hias diletakkan pada bagian tepi benda disebut ...", a: "pinggiran" },
-        { id: 42, type: 'isian', q: "Teknik manual dalam stilasi membutuhkan keterampilan ...", a: "tangan" },
-        { id: 43, type: 'isian', q: "Media yang digunakan dalam membuat ragam hias adalah ...", a: "bidang datar" },
-        { id: 44, type: 'isian', q: "Sampah plastik, kaleng termasuk jenis limbah ...", a: "anorganik" },
-        { id: 45, type: 'isian', q: "Kertas yang tidak terpakai akan mencemari ...", a: "lingkungan" },
+        { id: 36, type: 'isian', q: "I have long holiday this weekend. <br>I .... (akan mengunjungi) my grandparents’ house.", a: "will visit" },
+        { id: 37, type: 'isian', q: "She .... to music tonight.", a: "will listen", img: "https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/quizzes/ca622a4b-9a4a-4952-8d8c-6ee521696028-v2?w=200&h=200" },
+        { id: 38, type: 'isian', q: "Matteo :....will you eat tonight?<br>Elin: I will eat fried rice.", a: "What" },
+        { id: 39, type: 'isian', q: "Marlo : .... will you spend your holiday?<br>Patto: I will spend it at home", a: "Where" },
+        { id: 40, type: 'isian', q: "The boys will play football in the field ....(beosk) ", a: "tomorrow" },
+        { id: 41, type: 'isian', q: "My aunt will go to Raja Ampat .... (tahun depan)", a: "next year" },
+        { id: 42, type: 'isian', q: "I want to be a .... i will sing on the stage.", a: "singer" },
+        { id: 43, type: 'isian', q: "Rudi : What will you do when you grow up?<br>Giana: I want to be a ....", a: "teacher" },
+        { id: 44, type: 'isian', q: "Kianna : What is your dream?<br>Yoga: I want to be a doctor. <br>I will work in a ....", a: "hospital" },
+        { id: 45, type: 'isian', q: "Siska wants to be a chef. She will have her own restaurant. She will .... in the kitchen.", a: "cook" },
 
-        { id: 46, type: 'uraian', q: "Jelaskan apa yang dimaksud dengan keseimbangan!", a: "" },
-        { id: 47, type: 'uraian', q: "Sebutkan 3 jenis motif batik jonegoroan!", a: "" },
-        { id: 48, type: 'uraian', q: "Sebutkan 3 jenis bentuk ragam hias!", a: "" },
-        { id: 49, type: 'uraian', q: "Sebutkan 3 teknik menggambar ragam hias!", a: "" },
-        { id: 50, type: 'uraian', q: "Sebutkan 3 manfaat mendaur ulang limbah!", a: "" }
+        { id: 46, type: 'uraian', q: "Look at the picture. Write what they will do!", a: "", img: "https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/quizzes/8615f2bb-02c1-4e19-9304-2faf7d4b7609-v2?w=200&h=200" },
+        { id: 47, type: 'uraian', q: "Rearrange the words into a good sentence!<br> ride – not – tomorrow – Danny – will – a bicycle", a: "Danny will not ride a bicycle tomorrow" },
+        { id: 48, type: 'uraian', q: "Andy: What do you want to be when you grow up?<br>Beni : I want to be a chef because I love cooking and making tasty food.<br>Andy : I want to be a police officer. I want to help people and catch bad guys. I will keep people safe.<br>Candra : I want to be a football player. I love playing football and scoring goals.<br><br><b>Question: What is Andy’s dream job?</b>", a: "" },
+        { id: 49, type: 'uraian', q: "Andy: What do you want to be when you grow up?<br>Beni : I want to be a chef because I love cooking and making tasty food.<br><br><b>Question: Why does Beni want to be a chef?</b>", a: "" },
+        { id: 50, type: 'uraian', q: "Candra : I want to be a football player. I love playing football and scoring goals.<br>Andy : That’s so cool! Candra, why do you want to be a football player?<br>Candra : I want to be a football player because I love the game and I want to be famous.<br><br><b>Question: What does Candra want when he grows up?</b>", a: "" }
     ];
 
     let current = 0;
     let answers = {};
 
-    // Mencegah Siswa Keluar Halaman Secara Tidak Sengaja
-    window.onbeforeunload = function() {
-        return "Data ujian mungkin hilang jika Anda keluar.";
-    };
+    async function startExam() {
+        const name = document.getElementById('stu-name').value.trim();
+        const id = document.getElementById('stu-id').value.trim();
+        
+        if(!name || !id) { alert("Nama dan Nomor harus diisi!"); return; }
 
-async function startExam() {
-    const name = document.getElementById('stu-name').value.trim();
-    const id = document.getElementById('stu-id').value.trim();
-    
-    if(!name || !id) { 
-        alert("Nama dan Nomor harus diisi!"); 
-        return; 
-    }
+        document.getElementById('loading').style.display = 'flex';
+        document.getElementById('loading-text').innerText = "Memvalidasi data...";
 
-    // Tampilkan loading saat mengecek status
-    document.getElementById('loading').style.display = 'flex';
-    document.getElementById('loading').querySelector('p').innerText = "Memvalidasi data peserta...";
+        try {
+            const response = await fetch(`${SCRIPT_URL}?action=checkStatus&no_peserta=${id}`);
+            const status = await response.text();
 
-    try {
-        // Memanggil fungsi checkStatus di GAS
-        const response = await fetch(`${SCRIPT_URL}?action=checkStatus&no_peserta=${id}`);
-        const status = await response.text();
+            if (status === "exists") {
+                alert("Nomor Peserta ini sudah digunakan!");
+                document.getElementById('loading').style.display = 'none';
+                return;
+            }
 
-        if (status === "exists") {
-            alert("Maaf, Nomor Peserta ini sudah digunakan untuk mengirim jawaban.");
             document.getElementById('loading').style.display = 'none';
-            return;
+            document.getElementById('user-display').innerText = name;
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('exam-header').style.display = 'flex';
+            document.getElementById('exam-body').style.display = 'flex';
+            
+            const saved = localStorage.getItem('asat_answers_inggris');
+            if(saved) answers = JSON.parse(saved);
+
+            initNav();
+            render();
+            startTimer(90);
+        } catch (err) {
+            document.getElementById('loading').style.display = 'none';
+            alert("Koneksi gagal. Coba lagi.");
         }
-
-        // Jika tersedia, lanjut ke ujian
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('user-display').innerText = name.toUpperCase();
-        document.getElementById('login-page').style.display = 'none';
-        document.getElementById('exam-header').style.display = 'flex';
-        document.getElementById('exam-body').style.display = 'flex';
-        
-        // Load Auto-save jika ada
-        const saved = localStorage.getItem('asat_answers');
-        if(saved) answers = JSON.parse(saved);
-
-        initNav();
-        render();
-        startTimer(90);
-        
-    } catch (err) {
-        document.getElementById('loading').style.display = 'none';
-        alert("Gagal terhubung ke server. Pastikan koneksi internet stabil.");
     }
-}
+
     function initNav() {
         const grid = document.getElementById('nav-grid');
         grid.innerHTML = "";
@@ -251,9 +292,8 @@ async function startExam() {
         const s = bankSoal[current];
         document.getElementById('header-no').innerText = "SOAL NO " + (current + 1);
         document.getElementById('q-type').innerText = s.type.toUpperCase();
-        document.getElementById('q-text').innerText = s.q;
+        document.getElementById('q-text').innerHTML = s.q;
         
-        // Handle Gambar
         const imgContainer = document.getElementById('img-container');
         imgContainer.innerHTML = s.img ? `<img src="${s.img}" class="q-image">` : "";
 
@@ -273,15 +313,16 @@ async function startExam() {
         } else if(s.type === 'isian') {
             area.innerHTML = `<input type="text" id="ans-input" value="${answers[current]||''}" oninput="saveAnswer(this.value)" placeholder="Ketik jawaban singkat...">`;
         } else {
-            area.innerHTML = `<textarea oninput="saveAnswer(this.value)" placeholder="Tuliskan penjelasan lengkap...">${answers[current]||''}</textarea>`;
+            area.innerHTML = `<textarea oninput="saveAnswer(this.value)" placeholder="Tuliskan jawaban lengkap...">${answers[current]||''}</textarea>`;
         }
+        window.scrollTo(0,0);
         updateUI();
     }
 
     function saveAnswer(val) {
         answers[current] = val;
-        localStorage.setItem('asat_answers', JSON.stringify(answers));
-        if(bankSoal[current].type === 'pg') render(); // Re-render for selection style
+        localStorage.setItem('asat_answers_inggris', JSON.stringify(answers));
+        if(bankSoal[current].type === 'pg') render();
         updateUI();
     }
 
@@ -299,7 +340,7 @@ async function startExam() {
         });
         document.getElementById('progress').innerText = count + "/50";
         document.getElementById('btn-prev').disabled = current === 0;
-        document.getElementById('btn-next').innerText = current === 49 ? "KONFIRMASI SELESAI" : "BERIKUTNYA";
+        document.getElementById('btn-next').innerText = current === 49 ? "SELESAI" : "BERIKUTNYA";
     }
 
     function nav(d) {
@@ -309,19 +350,14 @@ async function startExam() {
 
     function confirmFinish() {
         const count = Object.values(answers).filter(a => a !== "").length;
-        if(count < 50) {
-            if(!confirm(`Ada ${50 - count} soal belum dijawab. Tetap kirim?`)) return;
-        } else {
-            if(!confirm("Yakin ingin mengakhiri ujian dan kirim jawaban?")) return;
-        }
-        
-        submitData();
+        const msg = count < 50 ? `Ada ${50 - count} soal belum dijawab. Kirim sekarang?` : "Yakin ingin mengirim jawaban?";
+        if(confirm(msg)) submitData();
     }
 
     function submitData() {
         document.getElementById('loading').style.display = 'flex';
-        window.onbeforeunload = null; // Izinkan navigasi setelah kirim
-
+        document.getElementById('loading-text').innerText = "Mengirim jawaban...";
+        
         let pgBenar = 0;
         bankSoal.forEach((s, i) => {
             if(s.type === 'pg' && answers[i] === s.a) pgBenar++;
@@ -337,15 +373,16 @@ async function startExam() {
         fetch(SCRIPT_URL, {
             method: "POST",
             mode: "no-cors",
-            body: JSON.stringify(payload)
+            body: JSON.stringify(payload),
+            headers: { "Content-Type": "text/plain" }
         }).then(() => {
-            localStorage.removeItem('asat_answers');
+            localStorage.removeItem('asat_answers_inggris');
             document.getElementById('loading').style.display = 'none';
             document.getElementById('exam-body').style.display = 'none';
             document.getElementById('exam-header').style.display = 'none';
             document.getElementById('result-page').style.display = 'block';
         }).catch(() => {
-            alert("Gagal mengirim! Periksa internet Anda.");
+            alert("Gagal kirim. Cek internet!");
             document.getElementById('loading').style.display = 'none';
         });
     }
@@ -357,22 +394,22 @@ async function startExam() {
             document.getElementById('timer').innerText = `${mn}:${s<10?'0':''}${s}`;
             if(t-- <= 0) { 
                 clearInterval(iv); 
-                alert("Waktu habis! Jawaban akan dikirim otomatis.");
                 submitData(); 
             }
         }, 1000);
     }
 
     function clearAndReload() {
-        localStorage.removeItem('asat_answers');
+        localStorage.removeItem('asat_answers_inggris');
         location.reload();
     }
 
-    // Blokir Copy-Paste & Shortcut Keyboard
+    // Proteksi sederhana
+    window.onbeforeunload = () => "Ujian sedang berlangsung!";
     document.addEventListener('keydown', e => {
-        if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'u')) {
+        if (e.ctrlKey && ['c','v','u'].includes(e.key)) {
             e.preventDefault();
-            alert("Dilarang melakukan tindakan curang!");
+            alert("Aksi dilarang!");
         }
     });
 </script>
